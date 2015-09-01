@@ -1,36 +1,26 @@
-if [ "$#" -eq "0" ] || [ "$#" -eq "2" ] || [ "$#" -eq "3" ]; then
+if [ "$#" -eq "0" ] || [ "$#" -gt "2" ]; then
 	echo "Error:Invalid Argument"
 	exit
 fi
-while [ $# -gt 0 ]
-do
-	option=$1;
-	shift;
-	case "$option" in
-		-d)
-			d=$1
-			shift; ;;
-		-s)
-			s=$1
-			shift; ;;
-		-h)
-			echo "-d	directory	it gives a path to find all the files in it"
-			echo "-s	size		minimum size for files"
-			shift; ;;
-		-help)
-			echo "-d	directory	it gives a path to find all the files in it"
-			echo "-s	size		minimum size for files"
-			shift; ;;
-		*)
-			echo "Error:Invalid Argument"; exit ;;
-	esac
-done
-list="$(find $d -type f -size $s)"
-declare -i n
-n=1
-for file in $list
-do
-	echo "$n=$file"
-	n=n+1
-	gzip $file
-done
+if [ "$#" -eq "1" ]; then
+	if ([ "$1" == "-h" ] || [ "$1" == "-help" ]); then
+		echo "Directory"
+		echo "Size"
+		exit
+	else
+		echo "Error:Invalid Argument"
+		exit
+	fi
+fi
+
+if !([ -z $1 ] && [ -z $2 ]); then
+	list="$(find $1 -type f -size $2)"
+	declare -i n
+	n=1
+	for file in $list
+	do
+		echo "$n=$file"
+		n=n+1
+		gzip $file
+	done
+fi

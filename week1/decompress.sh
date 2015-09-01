@@ -1,26 +1,13 @@
-if [ "$#" -eq "0" ]; then
+if [ "$#" -eq "0" ] || [ "$#" -gt "1" ]; then
 	echo "Error:Invalid Argument"
 	exit
 fi
-while [ $# -gt 0 ]
-do
-	option=$1;
-	shift;
-	case "$option" in
-		-d)
-			d=$1
-			shift; ;;		
-		-h)
-			echo "-d	directory	it gives a path to find all the files in it"
-			shift; ;;
-		-help)
-			echo "-d	directory	it gives a path to find all the files in it"
-			shift; ;;
-		*)
-			echo "Error:Invalid Argument"; exit ;;
-	esac
-done
-list="$(find $d -name '*.gz')"
+if [ "$1" == "-help" ] ||  [ "$1" == "-h" ]; then
+	echo "directory		it gives a path to find all the files in it"
+	exit
+fi
+
+list="$(find $1 -name '*.gz')"
 declare -i n
 n=1
 for file in $list
