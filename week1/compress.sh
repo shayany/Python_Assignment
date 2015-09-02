@@ -4,8 +4,8 @@ if [ "$#" -eq "0" ] || [ "$#" -gt "2" ]; then
 fi
 if [ "$#" -eq "1" ]; then
 	if ([ "$1" == "-h" ] || [ "$1" == "-help" ]); then
-		echo "Directory"
-		echo "Size"
+		echo "<directory>	<size>"
+		echo "size should be a plain number"
 		exit
 	else
 		echo "Error:Invalid Argument"
