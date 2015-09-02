@@ -14,7 +14,7 @@ if [ "$#" -eq "1" ]; then
 fi
 
 if !([ -z $1 ] && [ -z $2 ]); then
-	list="$(find $1 -type f -size $2)"
+	list="$(find $1 -type f -size +$2k)"
 	declare -i n
 	n=1
 	for file in $list
