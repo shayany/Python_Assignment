@@ -15,4 +15,4 @@ class SimpleString(object):
         """
         Print value of the self.userInput on terminal
         """
-        print self.userInput
+        print self.userInput.upper()
