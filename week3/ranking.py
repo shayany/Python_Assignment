@@ -12,11 +12,7 @@ def ranking():
     for key in ranking_dict.keys():
         min_nums=min(list(ranking_dict[key]))
         max_nums=max(list(ranking_dict[key]))
-        sum_temp=0
-        for item in list(ranking_dict[key]):
-            sum_temp=sum_temp+float(item)
-        avg=sum_temp/len(ranking_dict[key])
-        print ("Test name: {0}").format(key)
-        print ("CPU time: {0:.1f} s (min) \n          {1:.1f} s (avg) \n          {2:.1f} s (max)".format(min_nums,avg,max_nums))
+        avg=sum(list(ranking_dict[key]))/len(ranking_dict[key])
+        print ("Test name: {0}\nCPU time: {1:.1f} s (min) \n          {2:.1f} s (avg) \n          {3:.1f} s (max)".format(key,min_nums,avg,max_nums))
 ranking()
 
