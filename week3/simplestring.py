@@ -10,7 +10,7 @@ class SimpleString(object):
         and save that value in a local variable which called
         userInput
         """
-        self.userInput = raw_input()
+        self.userInput = raw_input("Enter String value:")
     def printString(self):
         """
         Print value of the self.userInput on terminal
