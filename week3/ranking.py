@@ -1,6 +1,5 @@
-import os
 def ranking():
-    datalogFile=open(os.path.dirname(__file__)+"/data.log","r")
+    datalogFile=open("data.log","r")
     ranking_dict={}
     for lines in datalogFile:
         if "CPU" in lines:
