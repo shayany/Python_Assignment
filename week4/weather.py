@@ -8,11 +8,11 @@ def getContent(url):
     """
     Return contents of the URL.
     """
-    return str(urllib.urlopen(url).read())
+    return str(urllib.urlopen(url).read()).decode("utf-8")
     #stringmy =Popen("curl http://fil.nrk.no/yr/viktigestader/noreg.txt",stdout=PIPE).communicate()[0]
     #print stringmy
 
-def findLink(name):
+def findLink(name=""):
     """
     return link to XML file based on the name
     
@@ -28,38 +28,36 @@ def findLink(name):
     
     """
     plainTextFile=getContent("http://fil.nrk.no/yr/viktigestader/noreg.txt") #Get content from this URL
-    noregTable=plainTextFile.split("\r\n") #Split the lines into the list 
     xmlList=[]#Create Empty list to return results 
-    name=name.replace("?",u".?")    #Replace wildcards (this is the format that regex support) 
-    name=name.replace("*",u".*")    #Replace wildcards (this is the format that regex support) 
-    
-    for counter in range(len(noregTable)-1):
-        noregTable[counter]=noregTable[counter].split("\t") #Split each line to a list of fields 
-        if re.findall(r"(?i)^{0}$".format(name.encode("utf-8")),str(noregTable[counter][1]).decode("utf-8")):
-            if not str(noregTable[counter][13]).decode("utf-8") in xmlList: 
-                xmlList.append(str(noregTable[counter][13]).decode("utf-8"))                      
+    cityName=name.decode("utf-8").replace("?",".??")    #Replace wildcards (this is the format that regex support) 
+    cityName=cityName.replace("*",".*?")    #Replace wildcards (this is the format that regex support) 
+    if name=="":    
+        xmlList = re.findall(u"^.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
+        return list(set(xmlList))               
+    xmlList = re.findall(u"^\\d*\\t{0}\\t.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
+    if xmlList:
+        return list(set(xmlList))   
     if not xmlList:
-        for counter in range(len(noregTable)-1):
-            if re.findall(r"(?i)^{0}$".format(name.encode("utf-8")),str(noregTable[counter][6]).decode("utf-8")):
-                if not str(noregTable[counter][13]).decode("utf-8") in xmlList: 
-                    xmlList.append(str(noregTable[counter][13]).decode("utf-8"))                    
+        xmlList = re.findall(u"^\\d*\\t.*?\\t.*?\\t.*?\\t.*?\\t.*?\\t{0}\\t.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
         if xmlList:
-            return xmlList
+            list(set(xmlList))    
     if not xmlList:
-        for counter in range(len(noregTable)-1):
-            if re.findall(r"(?i)^{0}$".format(name.encode("utf-8")),str(noregTable[counter][7]).decode("utf-8")):
-                if not str(noregTable[counter][13]).decode("utf-8") in xmlList: 
-                    xmlList.append(str(noregTable[counter][13]).decode("utf-8"))               
+        xmlList = re.findall(u"^\\d*\\t.*?\\t.*?\\t.*?\\t.*?\\t.*?\\t.*?\\t{0}\\t.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
         if xmlList:
-            return xmlList
-    if name=="":
-        for counter in range(len(noregTable)-1):
-            if not str(noregTable[counter][13]).decode("utf-8") in xmlList: 
-                xmlList.append(str(noregTable[counter][13]).decode("utf-8"))               
-        if xmlList:
-            return xmlList
-    return xmlList 
+            list(set(xmlList))   
+    return list(set(xmlList))
 
+def weatherInformation(url):
+    content=getContent(url)
+    #print type(content)
+    #print content.encode("utf-8")
+    listTime=re.findall(u"<tabular>([.\\r\\n\s]*)</tabular>",content.encode("utf-8"),re.I+re.MULTILINE)
+    print listTime
 #Query example       
-for item in findLink(""):
-    print item.encode("utf-8")
+#for item in findLink(""):
+#   print item.encode("utf-8")
+
+
+weatherInformation(findLink("?s?land?")[0].encode("utf-8"))
+
+
