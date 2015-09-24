@@ -29,14 +29,17 @@ def findLink(name=""):
     """
     plainTextFile=getContent("http://fil.nrk.no/yr/viktigestader/noreg.txt") #Get content from this URL
     xmlList=[]#Create Empty list to return results 
-    cityName=name.decode("utf-8").replace("?",".??")    #Replace wildcards (this is the format that regex support) 
-    cityName=cityName.replace("*",".*?")    #Replace wildcards (this is the format that regex support) 
+    cityName=name.decode("utf-8").replace("?","[^\\t]?")    #Replace wildcards (this is the format that regex support) 
+    cityName=cityName.replace("*","[^\\t]*?")    #Replace wildcards (this is the format that regex support) 
+    """
     if name=="":    
-        xmlList = re.findall(u"^.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
+        xmlList = re.findall("^.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
         return list(set(xmlList))               
+    """
     xmlList = re.findall(u"^\\d*\\t{0}\\t.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
     if xmlList:
         return list(set(xmlList))   
+    
     if not xmlList:
         xmlList = re.findall(u"^\\d*\\t.*?\\t.*?\\t.*?\\t.*?\\t.*?\\t{0}\\t.*\\t(.*?)\\r$".format(cityName),plainTextFile,re.I+re.MULTILINE)
         if xmlList:
@@ -51,13 +54,14 @@ def weatherInformation(url):
     content=getContent(url)
     #print type(content)
     #print content.encode("utf-8")
-    listTime=re.findall(u"<tabular>([.\\r\\n\s]*)</tabular>",content.encode("utf-8"),re.I+re.MULTILINE)
-    print listTime
+    tabular=re.findall(u"<tabular>((\\s|\\r|\\n|.)*?)</tabular>",content.encode("utf-8"),re.I+re.MULTILINE)
+    print type(str(tabular[0]))
 #Query example       
-#for item in findLink(""):
-#   print item.encode("utf-8")
+for item in findLink("Vestfold"):
+    print item.encode("utf-8")
 
 
-weatherInformation(findLink("?s?land?")[0].encode("utf-8"))
+
+#weatherInformation(findLink("?s?land?")[0].encode("utf-8"))
 
 
