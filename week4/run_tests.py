@@ -5,7 +5,7 @@ import re
 import time
 import os
 from ass45 import weather_update_retrieve
-
+#**********For testing you have to connect to internet**********
 def test_contentOftheURL():
     assert getContent("http://www.islostarepeat.com/")==str(urllib.urlopen("http://www.islostarepeat.com/".encode("utf-8")).read()).decode("utf-8")
 def test_checkURLAddress():

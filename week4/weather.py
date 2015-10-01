@@ -25,7 +25,7 @@ def getContent(url):
     try:    
         return str(urllib.urlopen(url.encode("utf-8")).read()).decode("utf-8")
     except Exception, e:    #Raise exception if the URL is not valid nor unreadable
-        print "This URL is nor readable!"
+        print "This URL is not readable!"
 
 def findLink(locationName=""):
     """
@@ -49,50 +49,51 @@ def findLink(locationName=""):
     if not(re.match(u"^[A-Za-zåøæÅØÆ\s*?_]*$",locationName)):
         print locationName
         raise  ValueError,"Enter letters/wildcards(* or ?)"
-    #plainTextFile=getContent("http://fil.nrk.no/yr/viktigestader/noreg.txt").lower() #Get content from this URL
-    plainTextFile=readFromLocalDB(u"http://fil.nrk.no/yr/viktigestader/noreg.txt").lower() #Get content from this URL
-    xmlList=[]
-    placeName=re.sub(u"[\s]+",u" ",locationName)            #Remove Extra space from the query
-    placeName=placeName.lstrip()                             #Remove left spaces
-    placeName=placeName.rstrip()                             #Remove right spaces
-    placeName=placeName.replace(u"Å",u"å")                   #lower() and upper() does not apply on special characters
-    placeName=placeName.replace(u"Ø",u"ø")                   #lower() and upper() does not apply on special characters
-    placeName=placeName.replace(u"Æ",u"æ")                   #lower() and upper() does not apply on special characters
-    placeName=placeName.replace(u"?",u"[^\\t]?")       #Replace wildcards (this is the format that regex support) 
-    placeName=placeName.replace(u"*",u"[^\\t]*?")      #Replace wildcards (this is the format that regex support)
-    placeName=placeName.replace(u" ","_")              #There is no space in URL(has been substitued by '_')
-    placeName=placeName.lower()                        #Does not apply on special characters 
-    plainTextFile=plainTextFile.replace(u"Å",u"å")
-    plainTextFile=plainTextFile.replace(u"Ø",u"ø")
-    plainTextFile=plainTextFile.replace(u"Æ",u"æ")
-    if locationName=="":    
-        xmlList = re.findall(u"^.*\\t(.*?)\\r$",plainTextFile,re.IGNORECASE|re.MULTILINE)
-        return list(set(xmlList))[1:101] #removing the first line from the file(First line contains titles)
-    xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
-                          "/(?:.*)"    #Fylke
-                          "/(?:.*)"    #Kommune
-                          "/(?:{0})"   #Stadname
-                          "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)
-    if xmlList:
-        return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))
-    if not xmlList:
+    try:
+        plainTextFile=readFromLocalDB(u"http://fil.nrk.no/yr/viktigestader/noreg.txt").lower() #Get content from this URL
+        xmlList=[]
+        placeName=re.sub(u"[\s]+",u" ",locationName)            #Remove Extra space from the query
+        placeName=placeName.lstrip()                             #Remove left spaces
+        placeName=placeName.rstrip()                             #Remove right spaces
+        placeName=placeName.replace(u"Å",u"å")                   #lower() and upper() does not apply on special characters
+        placeName=placeName.replace(u"Ø",u"ø")                   #lower() and upper() does not apply on special characters
+        placeName=placeName.replace(u"Æ",u"æ")                   #lower() and upper() does not apply on special characters
+        placeName=placeName.replace(u"?",u"[^\\t]?")       #Replace wildcards (this is the format that regex support) 
+        placeName=placeName.replace(u"*",u"[^\\t]*?")      #Replace wildcards (this is the format that regex support)
+        placeName=placeName.replace(u" ","_")              #There is no space in URL(has been substitued by '_')
+        placeName=placeName.lower()                        #Does not apply on special characters 
+        plainTextFile=plainTextFile.replace(u"Å",u"å")
+        plainTextFile=plainTextFile.replace(u"Ø",u"ø")
+        plainTextFile=plainTextFile.replace(u"Æ",u"æ")
+        if locationName=="":    
+            xmlList = re.findall(u"^.*\\t(.*?)\\r$",plainTextFile,re.IGNORECASE|re.MULTILINE)
+            return list(set(xmlList))[1:101] #removing the first line from the file(First line contains titles)
         xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
-                              "/(?:.*)"      #Fylke 
-                              "/(?:{0})"     #Kommune
-                              "/(?:.*)"      #Stadname   
-                              "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)
+                            "/(?:.*)"    #Fylke
+                            "/(?:.*)"    #Kommune
+                            "/(?:{0})"   #Stadname
+                            "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)
         if xmlList:
             return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))
-    if not xmlList:        
-        xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
-                              "/(?:{0})"        #Fylke
-                              "/(?:.*)"         #Kommune
-                              "/(?:.*)"         #Stadname 
-                              "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)    
-        if xmlList:
-            return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))             
-    return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))      
-
+        if not xmlList:
+            xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
+                                "/(?:.*)"      #Fylke 
+                                "/(?:{0})"     #Kommune
+                                "/(?:.*)"      #Stadname   
+                                "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)
+            if xmlList:
+                return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))
+        if not xmlList:        
+            xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
+                                "/(?:{0})"        #Fylke
+                                "/(?:.*)"         #Kommune
+                                "/(?:.*)"         #Stadname 
+                                "/forecast.xml)\\r$").format(placeName),plainTextFile,re.IGNORECASE|re.MULTILINE)    
+            if xmlList:
+                return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))             
+        return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList))      
+    except Exception:
+        print "Empty List (Due to lack of Intenet/No match found)"
 
 def weatherInformation(url):
     """
