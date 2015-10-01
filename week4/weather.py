@@ -235,4 +235,4 @@ def readFromLocalDB(query="",expirationTime=21600,testFlag=False):
                 databaseFile.close()
                 writeToLocalDB(weatherDictionary,"weatherDB.log")
                 return weatherDictionary[query][1]
- 
+
