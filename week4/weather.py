@@ -20,12 +20,13 @@ def getContent(url):
     ________
     Contents of the URL in UTF-8 format.
     """
-    if type(url)!=unicode:
-        url=url.decode("utf-8")     
-    try:    
+    
+    try:
+        if type(url)!=unicode:
+            url=url.decode("utf-8")    
         return str(urllib.urlopen(url.encode("utf-8")).read()).decode("utf-8")
     except Exception, e:    #Raise exception if the URL is not valid nor unreadable
-        print "This URL is not readable!"
+        print e.message
 
 def findLink(locationName=""):
     """
@@ -68,6 +69,7 @@ def findLink(locationName=""):
         if locationName=="":    
             xmlList = re.findall(u"^.*\\t(.*?)\\r$",plainTextFile,re.IGNORECASE|re.MULTILINE)
             return list(set(xmlList))[1:101] #removing the first line from the file(First line contains titles)
+                                            #list(set())    Remove the repetitive items from the list!
         xmlList = re.findall((u"^.*\\t(http://.*?/place/Norway"
                             "/(?:.*)"    #Fylke
                             "/(?:.*)"    #Kommune
@@ -193,7 +195,12 @@ def readFromLocalDB(query="",expirationTime=21600,testFlag=False):
             norwayPlacesDictionary['time']=time.time()
             writeToLocalDB(norwayPlacesDictionary,"noreg.txt")
             return norwayPlacesDictionary['content']                        
-    #********************************End Of Buffering noreg.txt***********************************        
+    #********************************End Of Buffering noreg.txt*********************************** 
+    #watherDictionary is a whole dictionary I have saved on file (buffer)
+    #Key is the Query(URL or Name of Place(contain wildcard))
+    #value is a list that contain two elements
+    #    1.Timestamp
+    #    2.Content of that query(Can be Url or Weather information)      
     try:
         query=query.lower()
         databaseFile=open("weatherDB.log","r")  
@@ -209,7 +216,6 @@ def readFromLocalDB(query="",expirationTime=21600,testFlag=False):
     else:#If file has been created before, this block will be executed
         weatherDictionary=pickle.load(databaseFile)   
         if(query in weatherDictionary):#Check whether query is in history or not 
-            #
             if (time.time()-weatherDictionary[query][0] > expirationTime):   #Default=6Hours 6*60*60 Seconds!(data found in history but it is not valid)
                 if testFlag==True:                                           #Useful for testing and debuging
                     print "Data was expired,Reading new data From Internet"

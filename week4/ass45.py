@@ -48,6 +48,7 @@ def weather_update_retrieve(location,selectedHour,selectedMinute):
                     endSlot=dateToSeconds(stringToDate(timeSlots[1]))            
                     if float(timeForPredicate) >=float(startSlot) and float(timeForPredicate) <=float(endSlot):                    
                         temp.append([readFromLocalDB(urls)[0][0],timeSlots[2],timeSlots[3],timeSlots[4],timeSlots[5]])
+                                                    #Name of place      Symbol      Precipitation   Windspeed   Temperature
                         break                                                 
             except:
                 print u"This link was not found: {0}".format(urls) 
