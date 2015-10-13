@@ -1,0 +1,221 @@
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 4 for \textit{INF3331-Shayan}}
+\author{Reviewer 1, Git-repo INF3331-Stianval, {stianval@ifi.uio.no} \\
+		Reviewer 2, Git-repo INF3331-ChristianFleischer, {chrf@fys.uio.no}}
+\date{Deadline: Tuesday, 13. October 2015, 23:59:59.}
+
+\begin{document}
+\maketitle
+
+\section{Introduction and review guidelines}
+
+
+
+
+
+\subsection{Assignment review}\label{sec:general_review}
+
+The review consists of two parts. The first part, section \ref{sec:review}, provides detailed feedback on the solution. In the first part there will be no point evaluation. The second part, section \ref{sec:points}, gives an estimate of the number of achieved points. The peer-review team needs to write both sections.
+
+The main goal of section \ref{sec:review} is to \emph{give constructive feedback and advice} on how to improve the solution. For each exercise, one should review the following points:
+
+\begin{itemize}
+  \item Is the code working as expected? 
+  \item Are regular expression used appropriately?  
+  \item Are there parts of the program that are hard to understand?   
+  \item Is the code well documented?
+  \item Are there docstrings?
+  \item Are the variable/class/function names sensible?
+  \item Can you find unnecessarily complicated parts of the program? If so, suggest an improved implementation.
+  \item Are there some odd ways of doing things in the program?
+  \item Do you find overuse of classes or not sufficient use of functions (or
+    classes)?
+  \item List the programming parts that are not answered.    
+  \item Is the code easy to read?
+\end{itemize}
+You should use (shortened) code snippets where appropriate to show how to improve the solution. 
+
+
+\subsection{Useful Latex snippets}
+Here are some sample usage of Latex.
+
+\noindent
+Equation:
+\begin{align}
+2 * \pi > 6
+\end{align}
+Sample code:
+
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+import sys
+print "This is a sample code"
+sys.exit(0)
+\end{minted}
+
+\section{Review}\label{sec:review}
+Review system specification:
+\begin{itemize}
+	\item Python 2.7.5
+    \item Red Hat Enterprise Linux Workstation release 7.1 (Maipo)
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.1: Retrieve web page}
+Add a review based on section \ref{sec:general_review}.
+\begin{itemize}
+  \item Is the code working as expected?   
+  \item Is the code well documented?
+  \item Are there docstrings?
+  \item Are the variable/class/function names sensible?
+  \item Can you find unnecessarily complicated parts of the program? If so, suggest an improved implementation.
+  \item Are there some odd ways of doing things in the program?
+  \item Do you find overuse of classes or not sufficient use of functions (or
+    classes)?
+  \item List the programming parts that are not answered.    
+  \item Is the code easy to read?
+\end{itemize}
+Nice and easy web page retrieval through the function \texttt{weather.getContent()}. Properly documented with docstring.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.2: Find link to location}
+This task seems to be implemented in \texttt{weather.findLink()}
+In addition, review the following assignment specific items: 
+\begin{itemize}
+\item The code searches for Stadnamn, Komnune and Fylke in correct order.
+\item The method usually handles searces nicely, but will fail on some rare occasions, like when "Prestebakke", which is a valid Stadnamn, is given as parameter. The url would look like \url{http://www.yr.no/place/Norway/Østfold/Halden/Prestebakke~23368/forecast.xml}, so the given regexp would not be able to match the \textasciitilde 23368-part.
+\item The wildcard searches matches exactly what they are supposed to, if we disregard the aforementioned exception.
+  \item Regular expression is used appropriately.
+  \item The code is well documented, and the variable names are sensible.
+  \item
+Using \texttt{list(set(xmlList))} to remove duplicate entries is very clever. 
+\\ \\
+The lines like
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+return list(set(xmlList))[0:100] if len(list(set(xmlList))[0:100]) else list(set(xmlList)) 
+\end{minted}
+seems a bit odd, as the same would be accomplished by simply
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+return list(set(xmlList))[0:100]
+\end{minted}
+(there should be no need to add an extra case for empty list here).
+
+Also:
+If the program flow reaches the last return statement in the function, it is possible to deduce that the list returned would be the empty list, since otherwise the function would have returned earlier. To have a neater flow in the function, all preceding return statements can actually be dropped.
+
+\end{itemize}
+
+All in all a nice and complete implementation.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.3: Retrieve weather information}
+This task seems to be implemented in \texttt{weather.weatherInformation()}. This is a well-documented and effective solution.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.4: Buffer all internet activity}
+This task is implemented in \texttt{weather.readfromInternet()}, \texttt{weather.writeToLocalDB()}, and \texttt{weather.readFromLocalDB()}.
+
+\begin{itemize}
+\item The buffer will renew if 6 hours have passed since data retrieval, but not if a new time period is entered, for instance at 18:00.
+\item The buffering to disk is working.
+  \item The code is well-documented.
+  \item I support the separation of buffering, but I wonder if this could have been better achieved by making two separate functions.
+  \item There is some copy-paste code readFromLocalDB(), causing the function to be unnecessarily lengthy. Even if it would prove hard to restructure the program flow, equal parts could be extracted to new functions.
+For instance this snippet appears twice.
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+temp=readfromInternet(query)
+if temp[query][1]==[]:
+    return -1
+else:
+    weatherDictionary[query]=temp[query]
+    databaseFile.close()
+    writeToLocalDB(weatherDictionary,"weatherDB.log")
+    return weatherDictionary[query][1] 
+\end{minted}
+There is much branching in this function, making it a bit hard to follow. Also in some of the branches it seems that files are not closed as they should.
+  \item Instead of just hard-coding "weatherDB.log" as file name in this function, the function could have taken a file name as an optional parameter. This would make it possible to do testing on another buffer file than the main one, and thus not lose the entire buffer if testing is performed.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.5: Create weather forecast}
+The solution is found in ass45.py.
+\begin{itemize}
+  \item The function \texttt{weather\_update()} works as expected, and output is quite nicely aligned in columns.
+  \item As usual the code is well-documented. Some use of indexes in \texttt{weather\_update\_retrieve()} is a bit hard to follow as it is not entirely clear what all of them mean.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.6: Testing the code}
+
+Tests have been run by \texttt{py.test -v run\_tests.py}
+\begin{itemize}
+\item All tests passes.
+\item The tests seems to cover everything asked for.
+\item Many tests using py.test, no pydoc-test.
+  \item Interesting way of using capsys.   
+  \item The tests are not as documented as the rest, but still nice and readable.
+  \item The code for \texttt{test\_temperature()} and \texttt{test\_forecast\_13\_Hannestad()} both suffer from duplicate code.
+  
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+#instead of
+def test_temperature():
+    assert float(weatherInformation(findLink("Hannestad")[0])[1][0][5])>=-50 and \ 
+        float(weatherInformation(findLink("Hannestad")[0])[1][0][5])<=+50
+
+#it is possible to do
+def test_temperature():
+    temp = float(weatherInformation(findLink("Hannestad")[0])[1][0][5])
+    assert temp>=-50 and temp<=+50
+
+#in that manner we don't need to call weatherInformation() and findLink() twice either, 
+#so this is not just for the aesthetics. 
+\end{minted}
+\item If the testing file had been named for instance \texttt{test\_weather.py} instead of \texttt{run\_tests.py}, py.test would have been able to automatically detect it, so it would not be necessary to specify it as parameter.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 4.7: Extreme places in Norway}
+Add a review based on section \ref{sec:general_review}.
+
+\begin{itemize}
+  \item Nice implementation, finds all places with the hottest/coldest temperature if there is a tie.
+  \item This function is easy to read.
+\end{itemize}
+
+\subsection{Advice and comments}
+This is a very good solution to the assignment. Only advice I'd like to give is to avoid duplicate code, otherwise you're doing great!
+
+\section{Estimated points}\label{sec:points}
+Based on the point system (\href{http://www.uio.no/studier/emner/matnat/ifi/INF3331/h15/assignments/review_rules.pdf}{download link}),
+how many points would you give this solution.
+
+For example:
+\begin{itemize}
+\item -2 points for some minor messy code-parts.
+\item -1 points for no pydoc test.
+\item -1 Obsolete buffer partly not working.
+\end{itemize}
+
+Total \noindent\textbf{26 out of 30 points}
+
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
