@@ -10,7 +10,7 @@ def solver_numpy(n=50,m=100,t0=0,t1=1000,dt=.1,nu=1):
     pyplot.imshow(u)
     loopCounter=t0
     #TIME
-    #tt1=time.time()
+    tt1=time.time()
     #TIME
     firstRow=1
     firstCol=1
@@ -26,8 +26,8 @@ def solver_numpy(n=50,m=100,t0=0,t1=1000,dt=.1,nu=1):
                                             + f[firstRow:lastRow,firstCol:lastCol])                 
         loopCounter+=dt
     #TIME
-    #tt2=time.time()
-    #print tt2-tt1
+    tt2=time.time()
+    print tt2-tt1
     #TIME
     pyplot.subplot(1,2,2)
     pyplot.imshow(u)
