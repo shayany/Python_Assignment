@@ -2,9 +2,25 @@ from numpy import *
 from instant import inline_with_numpy
 from matplotlib import pyplot
 import time  
-def solver_instant(n=50,m=100,t0=0,t1=1000,dt=.1,nu=1):
+def solver_instant(u,f,n=50,m=100,t0=0,t1=1000,dt=.1,nu=1):
+    """
+    This function solve the heat equation 
+    
+    Parameteres:
+    ------------
+        u: initial distribution numpy array (M*N)
+        f: Heat source function numpy array (M*N)
+        t0: Start time
+        t1: End time
+        dt: Time step
+        nu: Thermal diffusivity 
+    Return:
+    ------
+        u: Updated u
+    """
+        
     c_code = """
-double swap (int x1, int y1, double* u,int x2, int y2, double* f,int x3,double* args){
+double calculate (int x1, int y1, double* u,int x2, int y2, double* f,int x3,double* args){
         double t0=args[0];
         double t1=args[1];
         double dt=args[2];
@@ -31,13 +47,13 @@ double swap (int x1, int y1, double* u,int x2, int y2, double* f,int x3,double* 
         }    
 }
 """
-    sum_func = inline_with_numpy(c_code, arrays = [['x1', 'y1', 'u'],
+    call_func = inline_with_numpy(c_code, arrays = [['x1', 'y1', 'u'],
                                                    ['x2', 'y2', 'f'],
                                                    ['x3','args']],
                                 cache_dir="_cache")
 
-    u=array(zeros((m,n),dtype='double'))
-    f=array(ones((m,n),dtype='double'))
+    #u=array(zeros((m,n),dtype='double'))
+    #f=array(ones((m,n),dtype='double'))
 
     params=ones(4)
     params[0]=t0
@@ -50,10 +66,10 @@ double swap (int x1, int y1, double* u,int x2, int y2, double* f,int x3,double* 
     #TIME
     tt1=time.time()
     #TIME
-    sum_func(u,f,params)
+    call_func(u,f,params)
     #TIME
     tt2=time.time()
-    print tt2-tt1
+    print "Instant Time: {}s".format(tt2-tt1)
     #TIME  
     pyplot.subplot(1,2,2)
     pyplot.imshow(u)
