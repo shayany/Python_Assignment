@@ -27,9 +27,9 @@ def solver_cython(list u,list f,int n=50,int m=100,float t0=0,float t1=1000,floa
         u: Updated u
     """
     cdef int I,J,M,N        
-    cdef double U_NEW[100][50]
-    cdef double U[100][50]
-    cdef double F[100][50]
+    cdef double U_NEW[500][500]
+    cdef double U[500][500]
+    cdef double F[500][500]
     cdef float T0,T1,DT,NU
     
     T0=t0
