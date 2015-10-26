@@ -47,11 +47,11 @@ def solver_cython(list u,list f,int n=50,int m=100,float t0=0,float t1=1000,floa
             F[I][J]=f[I][J]  
     #u_new=[[u[i][j] for j in range(m)]for i in range(n)]
     
-    pyplot.subplot(1,2,1)
-    pyplot.imshow(u)
+    #pyplot.subplot(1,2,1)
+    #pyplot.imshow(u)
     cdef float loopCounter=T0
     #TIME
-    tt1=time.time()
+    #tt1=time.time()
     #TIME
     while(loopCounter<T1):
         for I in range(1,N-1):
@@ -62,14 +62,14 @@ def solver_cython(list u,list f,int n=50,int m=100,float t0=0,float t1=1000,floa
                 U[I][J]=U_NEW[I][J]
         loopCounter+=DT
     #TIME
-    tt2=time.time()
-    print "Cython Time: {}s".format(tt2-tt1)
+    #tt2=time.time()
+    #print "Cython Time: {}s".format(tt2-tt1)
     #TIME 
     for I in range(N):
         for J in range(M):
                 u[I][J]=U[I][J]   
-    pyplot.subplot(1,2,2)
-    pyplot.imshow(u)
-    pyplot.colorbar()
-    pyplot.show()
+    #pyplot.subplot(1,2,2)
+    #pyplot.imshow(u)
+    #pyplot.colorbar()
+    #pyplot.show()
     return u

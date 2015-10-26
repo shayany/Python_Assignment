@@ -20,11 +20,11 @@ def solver_numpy(u,f,n=100,m=50,t0=0,t1=1000,dt=.1,nu=1):
     """    
     #u=array(zeros((n,m),dtype='double'))
     #f=array(ones((n,m),dtype='double'))
-    pyplot.subplot(1,2,1)
-    pyplot.imshow(u)
+    #pyplot.subplot(1,2,1)
+    #pyplot.imshow(u)
     loopCounter=t0
     #TIME
-    tt1=time.time()
+    #tt1=time.time()
     #TIME
     firstRow=1
     firstCol=1
@@ -41,11 +41,11 @@ def solver_numpy(u,f,n=100,m=50,t0=0,t1=1000,dt=.1,nu=1):
                        
         loopCounter+=dt
     #TIME
-    tt2=time.time()
-    print "Numpy Time: {}s".format(tt2-tt1)
-    #TIME
-    pyplot.subplot(1,2,2)
-    pyplot.imshow(u)
-    pyplot.colorbar()
-    pyplot.show()
+    #tt2=time.time()
+    #print "Numpy Time: {}s".format(tt2-tt1)
+    #TIME    
+    #pyplot.subplot(1,2,2)
+    #pyplot.imshow(u)
+    #pyplot.colorbar()
+    #pyplot.show()
     return u

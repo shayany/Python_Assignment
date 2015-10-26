@@ -61,18 +61,18 @@ double calculate (int x1, int y1, double* u,int x2, int y2, double* f,int x3,dou
     params[2]=dt
     params[3]=nu
 
-    pyplot.subplot(1,2,1)
-    pyplot.imshow(u)
+    #pyplot.subplot(1,2,1)
+    #pyplot.imshow(u)
     #TIME
-    tt1=time.time()
+    #tt1=time.time()
     #TIME
     call_func(u,f,params)
     #TIME
-    tt2=time.time()
-    print "Instant Time: {}s".format(tt2-tt1)
+    #tt2=time.time()
+    #print "Instant Time: {}s".format(tt2-tt1)
     #TIME  
-    pyplot.subplot(1,2,2)
-    pyplot.imshow(u)
-    pyplot.colorbar()
-    pyplot.show()
+    #pyplot.subplot(1,2,2)
+    #pyplot.imshow(u)
+    #pyplot.colorbar()
+    #pyplot.show()
     return u
