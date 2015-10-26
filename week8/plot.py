@@ -5,7 +5,8 @@ def ShowPlot(u,saveFile=False):
     if saveFile:
         fig=pyplot.figure()
     pyplot.imshow(u)
-    pyplot.colorbar()
+    if array(u).max()>0 :
+        pyplot.colorbar()
     pyplot.show()
     if saveFile:
         fig.savefig(str(time.time())+".png")
