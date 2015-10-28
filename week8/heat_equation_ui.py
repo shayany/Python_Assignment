@@ -9,13 +9,34 @@ from heat_equation_numpy import solver_numpy
 from heat_equation_swig import solver_swig
 from heatEquationCython import solver_cython
 import timeit
+
 def timefunc(function,u_list,f_list,col,row,t0,t1,dt,nu):
+    """
+    This function used as a wrapper for timeit
+    
+    Parameteres
+    ___________
+    function:name of the function which should be called
+    u_list:
+    f_list:
+    col:
+    row:
+    t0:
+    t1:
+    dt:
+    nu:
+        
+    Return:
+    Best execution time
+    
+    NB:
+    Be cautious ,It takes time more than 10 minutes to estimate the time for
+    solver which implemented only with python
+    """
     def wrap():
         function(u_list,f_list,col,row,t0,t1,dt,nu)
     t = timeit.Timer(wrap)
-    return t.timeit(10) #Be cautious ,It takes time more than 10 minutes to- 
-                        #estimate the time for solver which implemented only
-                        #with python
+    return t.timeit(10) 
     
 def writeOnDisk(temperatureMatrix,fileName):
     """

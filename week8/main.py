@@ -10,11 +10,11 @@ col=100
 
 u_list=[[0.0 for x in range(row)]for x in range(col)]
 f_list=[[1.0 for x in range(row)]for x in range(col)]
-
+"""
 #ShowPlot(u_list)
 plainPython_result=solver(u_list,f_list,col,row,t0=0,t1=1000,dt=.1,nu=1)
 #ShowPlot(plainPython_result)
-
+"""
 #ShowPlot(u_list)
 Cython_result=solver_cython(u_list,f_list,col,row,t0=0,t1=1000,dt=.1,nu=1)
 #ShowPlot(Cython_result)
