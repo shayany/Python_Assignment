@@ -1,3 +1,11 @@
+"""
+It shows a contribution histogram from provided github filepath
+
+It return message in case of error
+
+The plot image will be saved in github directory
+"""
+
 from subprocess import Popen, PIPE
 import argparse
 import time
@@ -5,10 +13,30 @@ from datetime import datetime
 import os
 import re
 from matplotlib import pyplot
-from IPython import embed
+
 from datetime import timedelta
 from numpy import *
 import matplotlib.cm as cm
+
+def CommitLog(gitpath):
+    os.chdir(gitpath)
+    gitlog = Popen(["git","log"], stdout=PIPE).communicate()[0]
+    Author = re.findall(u"^Author: (.*?) <.*>$",gitlog,re.IGNORECASE|re.MULTILINE)#Use Regex to capture authors
+    Date = re.findall(u"^Date:[\s]{3}(?:.*?) (.*?) (.*?) \d+\d+:\d+\d+:\d+\d+ (.*?) (?:.*)$",gitlog,re.IGNORECASE|re.MULTILINE)#Use Regex to capture dates of commits
+    
+    authorDateDictionary={}#In this dictionary I will save the Authors and number of commits per each date for each authors!
+    for item in zip(Author,Date):
+        if str(item[0]) not in authorDateDictionary:
+            authorDateDictionary[str(item[0])]={datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')"):1}            
+        else:
+            if datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')") in authorDateDictionary[str(item[0])]:
+                authorDateDictionary[str(item[0])][datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')")]+=1
+            else:
+                authorDateDictionary[str(item[0])][datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')")]=1
+    return authorDateDictionary
+
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("input", help="Filepath")
 parser.add_argument("--plot", help="save the plots",action="store_true")
@@ -25,43 +53,20 @@ except:
 else:
 
     print "This is a github repository"
-    gitlog = Popen(["git","log"], stdout=PIPE).communicate()[0]
-    Author = re.findall(u"^Author: (.*?) <.*>$",gitlog,re.IGNORECASE|re.MULTILINE)
-    Date = re.findall(u"^Date:[\s]{3}(?:.*?) (.*?) (.*?) \d+\d+:\d+\d+:\d+\d+ (.*?) (?:.*)$",gitlog,re.IGNORECASE|re.MULTILINE)
-    mydic={}
-    for item in zip(Author,Date):
-        if str(item[0]) not in mydic:
-            mydic[str(item[0])]={datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')"):1}            
-        else:
-            if datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')") in mydic[str(item[0])]:
-                mydic[str(item[0])][datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')")]+=1
-            else:
-                mydic[str(item[0])][datetime.strptime(str(item[1]),r"('%b', '%d', '%Y')")]=1
-    #embed()
+    authorDateDictionary=CommitLog(args.input)
     userCollection={}
-    for user in mydic:
+    for user in authorDateDictionary:
         commitDate=[]
         numberOfCommits=[]        
-        for day in mydic[user]:
+        for day in authorDateDictionary[user]:
             commitDate.append(day)
-            numberOfCommits.append(mydic[user][day])
-
+            numberOfCommits.append(authorDateDictionary[user][day])
         temp=zip(commitDate,numberOfCommits)
         temp.sort()
         commitDate=list(zip(*temp)[0])
         numberOfCommits=list(zip(*temp)[1])
-        #if args.plot:
-        #    fig=pyplot.figure() 
-        """       
-        pyplot.plot_date(x=commitDate, y=numberOfCommits,fmt="-o")
-        pyplot.title("Histogram of {}\'s commits".format(user))
-        pyplot.yticks(range(0,max(numberOfCommits)+1))
-        #pyplot.fill_between(interpolate=True, color='blue')  
-        pyplot.show()
-        """
         userCollection[user]={'date':commitDate,'number':numberOfCommits}
-        #if args.plot:
-        #    fig.savefig(user+str(time.time())+".png")
+
 
     minDate=datetime.now()
     maxDate=datetime(1900,1,1)
@@ -93,12 +98,10 @@ else:
     
 
     for day in sorted(datedic):    
-        #dateAxis.append(day.isoformat())
         dateAxis.append(day)
         for i in range (len(userCollection)):
             localVariables['user_{0}'.format(i)].append(datedic[day][i])
 
-#colors=['b','g','r','c','m','y','k','w']
     cmap = pyplot.get_cmap('gnuplot')
     colors = cm.rainbow(linspace(0, 1, len(userCollection)))
     clrIndex=0
@@ -106,24 +109,21 @@ else:
     for i in range(len(userCollection)):
         localVariables['user_{0}'.format(i)]=array(localVariables['user_{0}'.format(i)])
 
-    b=0
+    sumOfCommits=0 
     users=[str(i) for i in userCollection]
     if args.plot:
-        fig=pyplot.figure() 
+        fig=pyplot.figure()
+         
     for i in range(0,len(userCollection)):
         if i==0:
-            b=0
+            sumOfCommits=0
         else:        
-            b+=array(localVariables['user_{0}'.format(i-1)])
-        #print colors[clrIndex]
-        pyplot.bar(dateAxis,localVariables['user_{0}'.format(i)],color=colors[clrIndex],bottom=b,label=users[i])
+            sumOfCommits+=array(localVariables['user_{0}'.format(i-1)])
+        pyplot.bar(dateAxis,localVariables['user_{0}'.format(i)],color=colors[clrIndex],bottom=sumOfCommits,label=users[i])
         clrIndex+=1
-    b+=array(localVariables['user_{0}'.format(len(userCollection)-1)])
-    #pyplot.bar(dateAxis,user_0,color='r',bottom=0)
-    #pyplot.bar(dateAxis,user_1,color='y',bottom=user_0)
-    #pyplot.bar(dateAxis,user_2,color='g',bottom=user_0+user_1)
-    #pyplot.bar(dateAxis,user_3,color='b',bottom=user_0+user_1+user_2)
-    pyplot.yticks(arange(0, (b).max(), 1))
+        
+    sumOfCommits+=array(localVariables['user_{0}'.format(len(userCollection)-1)])
+    pyplot.yticks(arange(0, (sumOfCommits).max(), 1))
     pyplot.xticks(rotation='vertical')
     pyplot.legend()
     if args.plot:
