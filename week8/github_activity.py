@@ -50,8 +50,8 @@ else:
         temp.sort()
         commitDate=list(zip(*temp)[0])
         numberOfCommits=list(zip(*temp)[1])
-        if args.plot:
-            fig=pyplot.figure() 
+        #if args.plot:
+        #    fig=pyplot.figure() 
         """       
         pyplot.plot_date(x=commitDate, y=numberOfCommits,fmt="-o")
         pyplot.title("Histogram of {}\'s commits".format(user))
@@ -60,8 +60,8 @@ else:
         pyplot.show()
         """
         userCollection[user]={'date':commitDate,'number':numberOfCommits}
-        if args.plot:
-            fig.savefig(user+str(time.time())+".png")
+        #if args.plot:
+        #    fig.savefig(user+str(time.time())+".png")
 
     minDate=datetime.now()
     maxDate=datetime(1900,1,1)
@@ -108,6 +108,8 @@ else:
 
     b=0
     users=[str(i) for i in userCollection]
+    if args.plot:
+        fig=pyplot.figure() 
     for i in range(0,len(userCollection)):
         if i==0:
             b=0
@@ -124,8 +126,9 @@ else:
     pyplot.yticks(arange(0, (b).max(), 1))
     pyplot.xticks(rotation='vertical')
     pyplot.legend()
+    if args.plot:
+        fig.savefig(str(time.time())+".png",format='png', dpi=1200)
     pyplot.show()
-    embed()
 
 
             
