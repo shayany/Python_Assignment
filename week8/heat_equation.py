@@ -28,7 +28,7 @@ def solver(u,f,n=50,m=100,t0=0,t1=1000,dt=.1,nu=1):
     #TIME
     #tt1=time.time()
     #TIME
-    while(loopCounter<t1):
+    while(loopCounter<=t1):
         for i in xrange(1,n-1):
             for j in xrange(1,m-1):
                 u_new[i][j]=u[i][j] + dt * (nu*u[i-1][j] + nu*u[i][j-1] - 4*nu*u[i][j] + nu*u[i][j+1] + nu*u[i+1][j] + f[i][j])

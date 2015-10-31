@@ -109,7 +109,7 @@ def ShowUI():
         nu=args.nu
     else:
         nu=1
-    if args.method==2 or args.method==3 or args.method==4:      
+    if args.method==2 or args.method==3 or args.method==4 or args.method==5:      
         u_numpy=asarray(loadFromDisk(args.input))
         col=len(u_numpy)
         row=len(u_numpy[0])
@@ -157,10 +157,10 @@ def ShowUI():
             writeOnDisk(Instant_result.tolist(),args.output)
     elif args.method==5:#Cython
         if args.timeit:
-            print(timefunc(solver_cython,u_list,f_list,col,row,t0,t1,dt,nu))
+            print(timefunc(solver_cython,u_numpy,f_numpy,col,row,t0,t1,dt,nu))
         else: 
-            ShowPlot(u_list,args.plot)
-            Cython_result=solver_cython(u_list,f_list,col,row,t0,t1,dt,nu)
+            ShowPlot(u_numpy,args.plot)
+            Cython_result=solver_cython(u_numpy,f_numpy,col,row,t0,t1,dt,nu)
             ShowPlot(Cython_result,args.plot)
             writeOnDisk(Cython_result,args.output)
     else:#Plain Python

@@ -30,7 +30,7 @@ def solver_numpy(u,f,n=100,m=50,t0=0,t1=1000,dt=.1,nu=1):
     firstCol=1
     lastRow=n-1       
     lastCol=m-1
-    while(loopCounter<t1):
+    while(loopCounter<=t1):
         u[firstRow:lastRow,firstCol:lastCol]=u[firstRow:lastRow,firstCol:lastCol] + dt \
                                             * (nu*u[firstRow-1:lastRow-1,firstCol:lastCol] \
                                             + nu*u[firstRow:lastRow,firstCol-1:lastCol-1] \

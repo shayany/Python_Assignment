@@ -1,16 +1,9 @@
 from matplotlib import pyplot 
 import time 
-
-"""def csum(list array):
-  cdef int i, N=len(array)
-  cdef double x, s=0.0
-  for i in range(N):
-      x = array[i]
-      s += x
-  return s"""
-  
-
-def solver_cython(list u,list f,int n=50,int m=100,float t0=0,float t1=1000,float dt=.1,float nu=1):
+from numpy import *
+import numpy as np
+cimport numpy as np
+def solver_cython(np.ndarray[double, ndim=2] u_,np.ndarray[double, ndim=2] f_,int n=50,int m=100,double t0=0,double t1=1000,double dt=.1,double nu=1):
     """
     This function solve the heat equation 
     
@@ -25,51 +18,26 @@ def solver_cython(list u,list f,int n=50,int m=100,float t0=0,float t1=1000,floa
     Return:
     ------
         u: Updated u
-    """
-    cdef int I,J,M,N        
-    cdef double U_NEW[500][500]
-    cdef double U[500][500]
-    cdef double F[500][500]
-    cdef float T0,T1,DT,NU
+    """      
+    cdef int i
+    cdef int j
+    cdef double loopCounter=t0
     
-    T0=t0
-    T1=t1
-    DT=dt
-    NU=nu
+    #cdef np.ndarray[double, ndim=1] u=1*u_
+    #cdef np.ndarray[double, ndim=1] u_new=1*u_
+    #cdef np.ndarray[double, ndim=1] f=1*f_
+
+    cdef np.ndarray[double, ndim=1] u=u_.ravel()
+    cdef np.ndarray[double, ndim=1] u_new=1*u
+    cdef np.ndarray[double, ndim=1] f=f_.ravel()
     
-    M=m
-    N=n
-    
-    for I in range(N):
-        for J in range(M):
-            U[I][J]=u[I][J]
-            U_NEW[I][J]=u[I][J] 
-            F[I][J]=f[I][J]  
-    #u_new=[[u[i][j] for j in range(m)]for i in range(n)]
-    
-    #pyplot.subplot(1,2,1)
-    #pyplot.imshow(u)
-    cdef float loopCounter=T0
-    #TIME
-    #tt1=time.time()
-    #TIME
-    while(loopCounter<T1):
-        for I in range(1,N-1):
-            for J in range(1,M-1):
-                U_NEW[I][J]=U[I][J] + DT * (NU*U[I-1][J] + NU*U[I][J-1] - 4*NU*U[I][J] + NU*U[I][J+1] + NU*U[I+1][J] + F[I][J])
-        for I in range(N):
-            for J in range(M):
-                U[I][J]=U_NEW[I][J]
-        loopCounter+=DT
-    #TIME
-    #tt2=time.time()
-    #print "Cython Time: {}s".format(tt2-tt1)
-    #TIME 
-    for I in range(N):
-        for J in range(M):
-                u[I][J]=U[I][J]   
-    #pyplot.subplot(1,2,2)
-    #pyplot.imshow(u)
-    #pyplot.colorbar()
-    #pyplot.show()
-    return u
+    while(loopCounter<=t1):
+        for i in xrange(1,n-1):
+            for j in xrange(1,m-1):
+                u_new[i*m+j]=u[i*m+j] + dt * (nu*u[(i-1)*m+j] + nu*u[i*m+j-1] - 4*nu*u[i*m+j] + nu*u[i*m+j+1] + nu*u[(i+1)*m+j] + f[i*m+j]);
+        loopCounter+=dt
+        #for i in xrange(0,n):
+        #    for j in xrange(0,m):
+        #       u[i*m + j]=u_new[i*m + j];
+        u=1*u_new
+    return u.reshape(n,m)

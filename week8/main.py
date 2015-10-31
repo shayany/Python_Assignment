@@ -15,8 +15,11 @@ f_list=[[1.0 for x in range(row)]for x in range(col)]
 plainPython_result=solver(u_list,f_list,col,row,t0=0,t1=1000,dt=.1,nu=1)
 #ShowPlot(plainPython_result)
 """
-#ShowPlot(u_list)
-Cython_result=solver_cython(u_list,f_list,col,row,t0=0,t1=1000,dt=.1,nu=1)
+
+u_numpy=array(zeros((col,row),dtype='double'))
+f_numpy=array(ones((col,row),dtype='double'))
+#ShowPlot(u_numpy)
+Cython_result=solver_cython(u_numpy,f_numpy,col,row,t0=0,t1=1000,dt=.1,nu=1)
 #ShowPlot(Cython_result)
 
 u_numpy=array(zeros((col,row),dtype='double'))

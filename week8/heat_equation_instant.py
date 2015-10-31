@@ -33,7 +33,7 @@ double calculate (int x1, int y1, double* u,int x2, int y2, double* f,int x3,dou
             for (int j=0; j<y1; j++)
                 u_new[i*y1 + j]=u[i*y1 + j];
     
-        while(counterLoop<t1)
+        while(counterLoop<=t1)
         {
             for(int i=1;i<x1;i++)
             {
