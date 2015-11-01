@@ -1,3 +1,6 @@
+"""
+This file can be usefeul for debugging and timing purpose!
+"""
 from heat_equation import solver
 from heat_equation_instant import solver_instant
 from heat_equation_numpy import solver_numpy
