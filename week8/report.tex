@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+ 
+\usepackage{minted}
+\usepackage{amsmath}
+ 
+\title{Report for assignment 5}
+\begin{document}
+
+\section{Assignment 5}
+\subsection{Python implementation of the heat equation}
+In the first part of the assignment, I only used a list ,which is a native datastructure in python and may contain items from different types, and nested loops. The implementation was quite easy. However when I increase the size ($M\times N$)  of a rectangle or \textit{t1} it takes more time to be solved. Python does not use the contiguous memory for lists, so accessing to each element in a list become costly for the processor. 
+\par
+
+Based on the setup from the assignment's description my implementation has been executed in 54 seconds.
+
+\subsection{NumPy and C implementations}
+\subsubsection{Numpy}
+The second implementation was done using the Numpy module. Converting the nested loops from the previous section and using a new syntax can solve a heat equation much faster. However, after I managed to convert the plain solver to the numpy version, the result was simpler than I would have expected.In the Numpy version I only used one loop which runs between 
+[\textit{t0},\textit{t1}].
+
+\begin{minted}{python}
+loopCounter=t0
+firstRow=1
+firstCol=1
+lastRow=n-1       
+lastCol=m-1
+while(loopCounter<=t1):
+    u[firstRow:lastRow,firstCol:lastCol]=u[firstRow:lastRow,firstCol:lastCol] + dt \
+    * (nu*u[firstRow-1:lastRow-1,firstCol:lastCol] \
+    + nu*u[firstRow:lastRow,firstCol-1:lastCol-1] \
+    - 4*nu*u[firstRow:lastRow,firstCol:lastCol] \
+    + nu*u[firstRow:lastRow,firstCol+1:lastCol+1] \
+    + nu*u[firstRow+1:lastRow+1,firstCol:lastCol] \
+    + f[firstRow:lastRow,firstCol:lastCol])  
+    loopCounter+=dt
+return u
+\end{minted}
+
+\par
+The numpy solver can work out the heat equation in 2.06 seconds. This is because the numpy arrays are saved using contiguous memory allocation. 
+\subsubsection{Instant}
+In this version I defined a function in pure C language and called that via Instant module. As a result it took only 289 ms to execute the function. This is why I decided not to use any python datatypes for my nested loop.
+\par
+The downside is that debugging the code is more difficult. However, it can be more useful when we only want to rewrite small piece of code in C.
+\subsection{Testing}
+For the testing part, I have used the py.test to solve the heat equation via the numpy solver. In addition, I have calculated the value of the analytic\textunderscore u and f in the nested loops structure. The error value for the ($100\times 50$) rectangle is less than 0.0012 and when I increase the size the error will decrease accordingly.
+\subsection{User interface}
+
+All functions that I have created for the user interface are included in heat\textunderscore equation\textunderscore ui.py. I have defined \textit{timefunc} funcion that is a wrapper for calling a function with the \textit{timeit} module.If we want to  measure time for a function with non-primitive arguments, it becomes necessary to call it within a wrapper function.
+
+\par
+I also defined two extra functions ,writeOnDisk and loadFromDisk, that are responsible for loading an initial matrix and saving the result on the disk.
+
+\par
+I have used the if-else statement in my function for checking a input parameters,optional and non-optional, which caused a little mess in my code. 
+\end{document}

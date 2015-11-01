@@ -36,7 +36,7 @@ def timefunc(function,u_list,f_list,col,row,t0,t1,dt,nu):
     def wrap():
         function(u_list,f_list,col,row,t0,t1,dt,nu)
     t = timeit.Timer(wrap)
-    return t.timeit(10) 
+    return t.timeit(10)/10
     
 def writeOnDisk(temperatureMatrix,fileName):
     """
@@ -87,8 +87,7 @@ def ShowUI():
     parser.add_argument("--verbosity", help="increase output verbosity")
     parser.add_argument("--timeit", help="Report timing",action="store_true")
     args = parser.parse_args()
-    #print args.square**2
-        
+
     if args.t0:
         t0=args.t0
     else:
@@ -162,7 +161,7 @@ def ShowUI():
             ShowPlot(u_numpy,args.plot)
             Cython_result=solver_cython(u_numpy,f_numpy,col,row,t0,t1,dt,nu)
             ShowPlot(Cython_result,args.plot)
-            writeOnDisk(Cython_result,args.output)
+            writeOnDisk(Cython_result.tolist(),args.output)
     else:#Plain Python
         if args.timeit:
             print(timefunc(solver,u_list,f_list,col,row,t0,t1,dt,nu))
@@ -170,5 +169,4 @@ def ShowUI():
             ShowPlot(u_list,args.plot)
             plainPython_result=solver(u_list,f_list,col,row,t0,t1,dt,nu)
             ShowPlot(plainPython_result,args.plot)
-            writeOnDisk(plainPython_result,args.output)
-ShowUI()
+            writeOnDisk(plainPython_result,args.output)        
