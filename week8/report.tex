@@ -41,7 +41,14 @@ return u
 \par
 The numpy solver can work out the heat equation in 2.06 seconds. This is because the numpy arrays are saved using contiguous memory allocation. 
 \subsubsection{Instant}
-In this version I defined a function in pure C language and called that via Instant module. As a result it took only 289 ms to execute the function. This is why I decided not to use any python datatypes for my nested loop.
+In this version I declared a function in pure C language and called that via Instant module. As a result it took only 289 ms to execute the function. This is why I did not to use any python datatypes in my nested loops. 
+\par
+In addition, I declared a \textit{inline\textunderscore with\textunderscore numpy} function that takes 3 arguments. Namely, c\textunderscore code provided with a string variable which contains a whole C code, arrays which is get 3 arrays u,f and args(I have decided to use the 3 arrays, which in third one I can save the \textit{t0},\textit{t1},\textit{dt} and \textit{nu} ). 
+\begin{minted}{python}
+    call_func = inline_with_numpy(c_code, arrays = 
+    			[['x1', 'y1', 'u'],['x2', 'y2', 'f'],['x3','args']],
+    			cache_dir="_cache")
+\end{minted}
 \par
 The downside is that debugging the code is more difficult. However, it can be more useful when we only want to rewrite small piece of code in C.
 \subsection{Testing}
@@ -54,5 +61,33 @@ All functions that I have created for the user interface are included in heat\te
 I also defined two extra functions ,writeOnDisk and loadFromDisk, that are responsible for loading an initial matrix and saving the result on the disk.
 
 \par
-I have used the if-else statement in my function for checking a input parameters,optional and non-optional, which caused a little mess in my code. 
+I have used the if-else statement in my function for checking a input parameters,optional and non-optional, which caused a little mess in my code.
+\subsection{Swig and Cyton}
+
+\subsubsection{Swig}For this part I have decided to use the \textit{SWIG}. To harness the \textit{SWIG} power, first I had to write a interface file that act as a translator between Python and C:
+\begin{verbatim}
+/* solver.i */
+%module solver
+%{
+        #define SWIG_FILE_WITH_INIT
+        #include "solver.h"
+%}
+%include "numpy.i"
+%init %{
+        import_array();
+%}
+%apply (int DIM1, int DIM2, double *INPLACE_ARRAY2) {(int x1, int y1, double* u)}
+%apply (int DIM1, int DIM2, double *IN_ARRAY2) {(int x2, int y2, double* f)}
+%include "solver.h"
+\end{verbatim}
+ 
+ \par As you can see I have used *INPLACE\textunderscore ARRAY2 that is a provided keyword in SWIG which help us to declare a two dimensionals array as an Input and output.For the second array I only used  *IN\textunderscore ARRAY2 which become handy for stating an two dimensional array as input.
+ \par The speed for this function was 1.3 s. 
+\subsubsection{Cython}
+The Cython implementation is similiar to function that I have wrote in python, There are two main differences between the plain python and Cython in my implemenations:
+
+\par Firsly, I have used the \textit{ndarray[double, ndim=2]} which is used for declaring two dimensional array.
+\par Secondly, by decalaring a variables ,specially loop's counter, with cdef I have gained more speed.
+
+\par The speed for this function was 851 ms. 
 \end{document}
