@@ -8,6 +8,7 @@
 \usepackage{minted}
 \usepackage{amsmath}
 \usepackage{xcolor}
+
 \definecolor{LightGray}{gray}{0.95}
 
 \title{Peer-review of assignment 5 for \textit{INF3331-ReviewedRepo}}
@@ -98,6 +99,81 @@ You can leave this section empty. The review for all C-interfaces should go to s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Assignment 5.7: Github activity plot}
 Add a review based on section \ref{sec:general_review}.
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 5 for \textit{INF3331-Shayan}}
+\author{Thomas Fossøy Lyseggen, Git-repo INF3331-ThomasFossoy, {Thomaslyseggen@gmail.com} \\
+ 		Matthias Wenger, Git-repo INF3331-Matthias, {matthiw@student.matnat.uio.no} \\
+		Sean Christian Dutch, Git-repo INF3331-Sean, {seancd@student.matnat.uio.no}}
+\date{Deadline: Thursday, 12. November 2015, 23:59:59.}
+
+\begin{document}
+\maketitle
+
+\section{Review}\label{sec:review}
+
+platform linux2 -- Python 2.7.10 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.1:  Python implementation of the heat equation}
+
+Good implementation, works as expected. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.2: NumPy and C implementations} \label{sec:assignment5.2}
+
+\subsubsection*{NumPy:}
+
+It works as expected. But it is not really necassary to say \emph{firstRow=1} etc. Looks nice, but is somewhat superfluous.
+
+\subsubsection*{C:}
+The instructions you gave for setting up swig and instant, did not work. We tried it on 3 different computers. Cython works perfectly. Nice implementation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.3: Testing}
+
+Works great. Since you set the default values, you don't need to pass them to the function.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.4:  Develop a user interface}
+You should have set the default values in the argparser. Makes it easier to read. You could do:
+\begin{verbatim}
+parser.add_argument("--t0", help="specify the start-time",default=0,type=float)
+\end{verbatim}
+And just pass \emph{args.t0} etc to the function instead of creating local variables.  
+
+The verbosity mode doesn't work at all. It seems like it's not implemented. Some of the functionalities does not work together, like \emph{timeit} and \emph{save plot}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.5: Latex report}
+The report is well written, and you show technical understanding for performance of the different solutions. You haven't done any comparisons between the different implementations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.6: More C-interfaces}
+See subsection 5.2. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.7: Github activity plot}
+Works as expected. Nice looking plot. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Summary}
+Generally a good assignment, but could not get swig and instant to work. The instructions given did not work, and you should have written it in the report as well. The documentation could be more in depth. You have decided to run all the different solutions in one file (main), which is ok had all your implementations worked smoothly. Unfortunately seeing as swig etc. were faulty it made it harder to see whether the other implentations worked aswell.
 
 \bibliographystyle{plain}
 \bibliography{literature}
