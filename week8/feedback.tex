@@ -1,0 +1,105 @@
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 5 for \textit{INF3331-ReviewedRepo}}
+\author{Reviewer 1, Git-repo INF3331-Name1, {name1@email.no} \\
+ 		Reviewer 2, Git-repo INF3331-Name2, {name2@email.no} \\
+		Reviewer 3, Git-repo INF3331-Name3, {name3@email.no}}
+\date{Deadline: Tuesday, 10. November 2015, 23:59:59.}
+
+\begin{document}
+\maketitle
+
+\section{Introduction and review guidelines}
+
+\subsection{Assignment review}\label{sec:general_review}
+
+The review should provide detailed feedback on the solution to the student. The main goal is to \emph{give constructive feedback and advice} on how to improve the solution. For each (coding) exercise, one should review the following points:
+
+\begin{itemize}
+  \item Is the code \textbf{working as expected}? For non-internal functions (in particular for scripts that are run from the command-line), does the program handle invalid inputs sensibly?
+  \item Is the code written in \textbf{Pythonic way} \footnote{https://www.python.org/dev/peps/pep-0020/}? Is the code easy to read? Are the variable/class/function names sensible? Do you find overuse of classes or not sufficient use of functions or classes? Are there parts of the program that are hard to understand? 
+  \item Is the code \textbf{well documented}? Are there docstrings?
+  \item Can you find \textbf{unnecessarily complicated parts} of the program? If so, suggest an improved implementation.
+  \item List the programming parts that are not answered.
+\end{itemize}
+You should use (shortened) code snippets where appropriate to show how to improve the solution. 
+
+
+\subsection{Useful Latex snippets}
+Here are some sample usage of Latex.
+
+\noindent
+Equation:
+\begin{align}
+2 \pi > 6
+\end{align}
+Sample code:
+
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+import sys
+print "This is a sample code"
+sys.exit(0)
+\end{minted}
+
+\section{Review}\label{sec:review}
+
+Specify the system (Python version, operating system, ...) that was used for the review.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.1:  Python implementation of the heat equation}
+Add a review based on section \ref{sec:general_review}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.2: NumPy and C implementations} \label{sec:assignment5.2}
+Add a review for \underline{the numpy version and each C-version} in the repository based on section \ref{sec:general_review}.
+
+In addition, review the following assignment specific items: 
+\begin{itemize}
+  \item Does the numpy solution make use of vectorisation sufficiently? 
+  \item Does the solution make use of the C implementation sufficiently? 
+  \item Do you have any suggestions on how to improve the solution for speed? E.g. can copying of data arrays be avoided.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.3: Testing}
+Add a review based on section \ref{sec:general_review}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.4:  Develop a user interface}
+Add a review based on section \ref{sec:general_review}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.5: Latex report}
+Review the following items: 
+\begin{itemize}
+\item Does the report describe the performed work well? 
+\item Does the report have a comparison between the different implementations? 
+\item Does the report explain reason for the runtime differences? Does it provide a technical understanding for performance of the different solutions?
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.6: More C-interfaces}
+You can leave this section empty. The review for all C-interfaces should go to section 5.2.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.7: Github activity plot}
+Add a review based on section \ref{sec:general_review}.
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
