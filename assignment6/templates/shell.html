@@ -1,0 +1,12 @@
+<!doctype html>
+<title>Welcome to Shayan IPython</title>
+
+<form action="handle_python_commands" method="POST">
+	{% if result %}
+	<textarea name="terminal" rows="10" cols="80" disabled>{{ result }}</textarea>
+	{% endif %}	
+    <br>
+    <input type="text" name="pythonCommand" size="80" autofocus>
+    <br>
+    <input type="submit" value="Run">
+</form>
