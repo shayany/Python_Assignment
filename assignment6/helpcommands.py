@@ -1,8 +1,7 @@
 def helpCommands(command):
     """
-    Get python command with question mark ? and return the result
+    Get python command with question mark ? and show the result
     """
     command=command.split()
     temp=command[len(command)-1]
-    print temp
-    return help(temp[:-1])
+    help(temp[:-1])

@@ -36,16 +36,15 @@ def isAlphaNumericSymbol(ch):
     
 if __name__ == "__main__":
     lineNumber=0            #This variable keeps prompt's line number
-
     localNamespace=vars().copy()    #Saving a namespace 
     
     print "Welcome to Shayan IPython"
     
     commandHistory=[]            #List of all commands which has been executed
     commandHistoryPointer=0      #Pointor to the the commandHistory (When we press up and down button it will be changed accordingly)
-    
+    sys.stdout.write("In [{0}]: ".format(lineNumber))
     while True:
-        sys.stdout.write("In [{0}] :".format(lineNumber))        
+        #sys.stdout.write("In [{0}]: ".format(lineNumber))        
         lineNumber+=1
         
         line = ""
@@ -76,20 +75,21 @@ if __name__ == "__main__":
                             similar+=1
                     if similar>1:#If there are many variables with same prefix shows all of them to user
                         clearLine()
-                        sys.stdout.write('\rIn [{0}] :{1}'.format(lineNumber-1,code))
+                        sys.stdout.write('\rIn [{0}]: {1}'.format(lineNumber-1,code))
                         sys.stdout.write("\n"+temp+"\n")
+                        sys.stdout.write('\rIn [{0}]: '.format(lineNumber-1))
                         lineNumber-=1#In case of tab completion line number should not increase                   
                         break
                     elif similar==1:
                         clearLine()#If there is only one variable with same prefix complete the name in same line
-                        sys.stdout.write('\rIn [{0}] :{1}'.format(lineNumber-1,temp[:-1]))
+                        sys.stdout.write('\rIn [{0}]: {1}'.format(lineNumber-1,temp[:-1]))
                         code=temp[:-1]                    
             elif char=='B' and line[lineLen-3:] == "\x1b[":
                 #If user press the down arrow key show the next command from the commands history(All commands)
                 if(commandHistoryPointer<len(commandHistory)-1):
                     commandHistoryPointer+=1
                     clearLine()
-                    sys.stdout.write('\rIn [{0}] :'.format(lineNumber-1))
+                    sys.stdout.write('\rIn [{0}]: '.format(lineNumber-1))
                     sys.stdout.write(commandHistory[commandHistoryPointer])
                     code=commandHistory[commandHistoryPointer]
             elif char=='A' and line[lineLen-3:] == "\x1b[":
@@ -97,7 +97,7 @@ if __name__ == "__main__":
                 if(commandHistoryPointer>0):
                     commandHistoryPointer-=1
                     clearLine()
-                    sys.stdout.write('\rIn [{0}] :'.format(lineNumber-1))
+                    sys.stdout.write('\rIn [{0}]: '.format(lineNumber-1))
                     sys.stdout.write(commandHistory[commandHistoryPointer])
                     code=commandHistory[commandHistoryPointer]                                  
             elif char=='C' and line[lineLen-3:] == "\x1b[":
@@ -150,7 +150,8 @@ if __name__ == "__main__":
                 sys.stdout.write(char)               
             elif char=="\x04":#If CTRL+D will be pressed
                 if code:      #Empty the buffer
-                    sys.stdout.write("\n")
+                    sys.stdout.write("\r\nKeyboardInterupt\n")
+                    sys.stdout.write("In [{0}]: ".format(lineNumber-1))
                     lineNumber-=1#Program should not increase the prompt line number
                     break
                 else:         #Exit from the program
@@ -161,7 +162,7 @@ if __name__ == "__main__":
                 #If user press the enter (based on the OS)
                 if code=="":#program should not increase the number line when we enter empty command
                     lineNumber-=1
-                    print
+                    sys.stdout.write("\r\nIn [{0}]: ".format(lineNumber))
                     break                
                 if not line:
                     sys.stdout.write("\n")
@@ -170,13 +171,16 @@ if __name__ == "__main__":
                     commandHistoryPointer+=1
                     if code:# Check type of the commands
                         if(code[0]=="!"):#Operating system commands
-                            print OS_Commands(code)
+                            sys.stdout.write(OS_Commands(code))
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         elif(code[-1]=="?"):#Helper commands
-                            print helpCommands(code)
+                            helpCommands(code)
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         elif(code[:5]=="%save"):#Save command history
                             saveCommandsHistory(commandHistory,code.split()[1])                                                                                    
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         else:
-                            print feedline(code,localNamespace) 
+                            sys.stdout.write(feedline(code,localNamespace)) 
                 else:
                     sys.stdout.write("\n")
                     commandHistory.append(code)
@@ -184,13 +188,16 @@ if __name__ == "__main__":
                     commandHistoryPointer+=1
                     if code:# Check type of the commands
                         if(code[0]=="!"):#Operating system commands
-                            print OS_Commands(code)
+                            sys.stdout.write(OS_Commands(code))
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         elif(code[-1]=="?"):#Helper commands
-                            print helpCommands(code)
+                            helpCommands(code)
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         elif(code[:5]=="%save"):#Save command history
                             saveCommandsHistory(commandHistory,code.split()[1])                                                                                    
+                            sys.stdout.write("In [{0}]: ".format(lineNumber))
                         else:
-                            print feedline(code,localNamespace)                                        
+                            sys.stdout.write(feedline(code,localNamespace))                                        
                 break;                    
             # add char to line
             line+=char
