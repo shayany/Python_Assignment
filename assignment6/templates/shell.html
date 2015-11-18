@@ -3,7 +3,7 @@
 
 <form action="handle_python_commands" method="POST">
 	{% if result %}
-	<textarea name="terminal" rows="10" cols="80" disabled>{{ result }}</textarea>
+	<textarea name="terminal" rows="10" cols="80">{{ result }}</textarea>
 	{% endif %}	
     <br>
     <input type="text" name="pythonCommand" size="80" autofocus>
