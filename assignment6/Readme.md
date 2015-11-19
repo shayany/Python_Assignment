@@ -4,9 +4,11 @@ Example of running feedline in IPython:
 
 
 lineNumber=0
+
 namespace=vars().copy()
 
 from feedline import feedline
+
 print feedline("print 'Hello World!'",namespace)
 
 
