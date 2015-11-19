@@ -3,9 +3,6 @@
 
 import os
 from feedline import feedline
-from oscommands import *
-from helpcommands import *
-from savecommand import *
 from getchar import *
 
 
@@ -169,35 +166,13 @@ if __name__ == "__main__":
                     commandHistory.append(code)
                     commandHistoryPointer=len(commandHistory)-1
                     commandHistoryPointer+=1
-                    if code:# Check type of the commands
-                        if(code[0]=="!"):#Operating system commands
-                            sys.stdout.write(OS_Commands(code))
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        elif(code[-1]=="?"):#Helper commands
-                            helpCommands(code)
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        elif(code[:5]=="%save"):#Save command history
-                            saveCommandsHistory(commandHistory,code.split()[1])                                                                                    
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        else:
-                            sys.stdout.write(feedline(code,localNamespace)) 
+                    sys.stdout.write(feedline(code,localNamespace))
                 else:
                     sys.stdout.write("\n")
                     commandHistory.append(code)
                     commandHistoryPointer=len(commandHistory)-1
                     commandHistoryPointer+=1
-                    if code:# Check type of the commands
-                        if(code[0]=="!"):#Operating system commands
-                            sys.stdout.write(OS_Commands(code))
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        elif(code[-1]=="?"):#Helper commands
-                            helpCommands(code)
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        elif(code[:5]=="%save"):#Save command history
-                            saveCommandsHistory(commandHistory,code.split()[1])                                                                                    
-                            sys.stdout.write("In [{0}]: ".format(lineNumber))
-                        else:
-                            sys.stdout.write(feedline(code,localNamespace))                                        
+                    sys.stdout.write(feedline(code,localNamespace))
                 break;                    
             # add char to line
             line+=char
