@@ -1,5 +1,10 @@
 Before running the feedline function you have to added these two lines before the function.
 
+```python
+lineNumber=0
+namespace=vars().copy()
+```
+
 ###Example of running feedline in IPython:
 
 
